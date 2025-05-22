@@ -29,16 +29,31 @@ export function ThemeProvider({
   storageKey = "vite-ui-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem(storageKey) as Theme) || defaultTheme)
+  const [theme, setTheme] = useState<Theme>(defaultTheme)
+  const [mounted, setMounted] = useState(false)
+
+  // Once mounted on client, now we can show the UI
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
-    const root = window.document.documentElement
+    if (typeof window === 'undefined') return
 
+    const savedTheme = localStorage.getItem(storageKey) as Theme
+    if (savedTheme) {
+      setTheme(savedTheme)
+    }
+  }, [storageKey])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const root = document.documentElement
     root.classList.remove("light", "dark")
 
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-
       root.classList.add(systemTheme)
       return
     }
@@ -48,10 +63,19 @@ export function ThemeProvider({
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme)
-      setTheme(theme)
+    setTheme: (newTheme: Theme) => {
+      try {
+        localStorage.setItem(storageKey, newTheme)
+      } catch (e) {
+        // Handle localStorage errors silently
+      }
+      setTheme(newTheme)
     },
+  }
+
+  // Prevent hydration mismatch by not rendering until mounted on client
+  if (!mounted) {
+    return null
   }
 
   return (
