@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --foreground: 0 0% 0%;
+  --background: 0 0% 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground: 0 0% 100%;
+    --background: 0 0% 0%;
+  }
+}
+
+body {
+  color: rgb(var(--foreground));
+  background-color: rgb(var(--background));
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @layer base {
   :root {
     --background: 0 0% 100%;

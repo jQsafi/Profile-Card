@@ -1,9 +1,8 @@
 "use client"
 
-import type * as React from "react"
 import { createContext, useContext, useEffect, useState } from "react"
 
-type Theme = "dark" | "light" | "system"
+type Theme = "light" | "dark"
 
 type ThemeProviderProps = {
   children: React.ReactNode
@@ -11,75 +10,47 @@ type ThemeProviderProps = {
   storageKey?: string
 }
 
-type ThemeProviderState = {
+const ThemeProviderContext = createContext<{
   theme: Theme
   setTheme: (theme: Theme) => void
-}
-
-const initialState: ThemeProviderState = {
-  theme: "system",
-  setTheme: () => null,
-}
-
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
+} | null>(null)
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
-  storageKey = "vite-ui-theme",
+  defaultTheme = "light",
+  storageKey = "theme-preference",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme)
-  const [mounted, setMounted] = useState(false)
 
-  // Once mounted on client, now we can show the UI
   useEffect(() => {
-    setMounted(true)
+    try {
+      const root = window.document.documentElement
+      const savedTheme = localStorage.getItem(storageKey) as Theme | null
+      const colorScheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      
+      const initialTheme = savedTheme ?? colorScheme
+      root.classList.remove("light", "dark")
+      root.classList.add(initialTheme)
+      setTheme(initialTheme)
+    } catch (e) {
+      console.error("Error initializing theme:", e)
+    }
   }, [])
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const savedTheme = localStorage.getItem(storageKey) as Theme
-    if (savedTheme) {
-      setTheme(savedTheme)
+    try {
+      const root = window.document.documentElement
+      root.classList.remove("light", "dark")
+      root.classList.add(theme)
+      localStorage.setItem(storageKey, theme)
+    } catch (e) {
+      console.error("Error setting theme:", e)
     }
-  }, [storageKey])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const root = document.documentElement
-    root.classList.remove("light", "dark")
-
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-      root.classList.add(systemTheme)
-      return
-    }
-
-    root.classList.add(theme)
-  }, [theme])
-
-  const value = {
-    theme,
-    setTheme: (newTheme: Theme) => {
-      try {
-        localStorage.setItem(storageKey, newTheme)
-      } catch (e) {
-        // Handle localStorage errors silently
-      }
-      setTheme(newTheme)
-    },
-  }
-
-  // Prevent hydration mismatch by not rendering until mounted on client
-  if (!mounted) {
-    return null
-  }
+  }, [theme, storageKey])
 
   return (
-    <ThemeProviderContext.Provider {...props} value={value}>
+    <ThemeProviderContext.Provider value={{ theme, setTheme }} {...props}>
       {children}
     </ThemeProviderContext.Provider>
   )
@@ -87,8 +58,6 @@ export function ThemeProvider({
 
 export const useTheme = () => {
   const context = useContext(ThemeProviderContext)
-
-  if (context === undefined) throw new Error("useTheme must be used within a ThemeProvider")
-
+  if (!context) throw new Error("useTheme must be used within a ThemeProvider")
   return context
 }

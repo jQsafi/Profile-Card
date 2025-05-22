@@ -23,83 +23,71 @@ export default function AnimatedBackground() {
   const [particles, setParticles] = useState<Particle[]>([])
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
+  const [currentTheme, setCurrentTheme] = useState<'light'|'dark'>('light')
   const animationRef = useRef<number>(0)
-  const isDarkMode = useRef(document.documentElement.classList.contains("dark"))
   const frameCount = useRef(0)
 
-  // Initialize particles
+  // Initialize particles and theme detection
   useEffect(() => {
+    if (typeof window === 'undefined' || !canvasRef.current) return
+
+    const checkDarkMode = () => {
+      const isDark = document.documentElement.classList.contains("dark")
+      setCurrentTheme(isDark ? 'dark' : 'light')
+      return isDark
+    }
+    
     const handleResize = () => {
-      if (canvasRef.current) {
-        const width = window.innerWidth
-        const height = window.innerHeight
-        canvasRef.current.width = width
-        canvasRef.current.height = height
-        setDimensions({ width, height })
+      const width = window.innerWidth
+      const height = window.innerHeight
+      canvasRef.current.width = width
+      canvasRef.current.height = height
+      setDimensions({ width, height })
 
-        // Create particles based on screen size - more particles for larger screens
-        const particleCount = Math.min(Math.floor((width * height) / 8000), 150)
-        const newParticles: Particle[] = []
+      // Create particles based on screen size - more particles for larger screens
+      const particleCount = Math.min(Math.floor((width * height) / 8000), 150)
+      const newParticles: Particle[] = []
 
-        for (let i = 0; i < particleCount; i++) {
-          newParticles.push(createParticle(width, height))
-        }
-
-        setParticles(newParticles)
+      for (let i = 0; i < particleCount; i++) {
+        newParticles.push(createParticle(width, height))
       }
+
+      setParticles(newParticles)
     }
 
     // Create a single particle with more varied properties
     const createParticle = (width: number, height: number): Particle => {
-      const isDark = document.documentElement.classList.contains("dark")
-      isDarkMode.current = isDark
+      const isDark = checkDarkMode()
 
       // Size with more variation - mix of small and large particles
-      const size =
-        Math.random() < 0.8
-          ? Math.random() * 3 + 0.5 // 80% small particles (0.5-3.5)
-          : Math.random() * 6 + 4 // 20% larger particles (4-10)
+      const size = Math.random() < 0.8
+        ? Math.random() * 3 + 0.5 // 80% small particles (0.5-3.5)
+        : Math.random() * 6 + 4 // 20% larger particles (4-10)
 
       // Slower, more varied speeds
       const speedFactor = 0.15
       const speedX = (Math.random() * 2 - 1) * speedFactor
       const speedY = (Math.random() * 2 - 1) * speedFactor
 
-      // Different color schemes for light and dark modes with more saturation variation
+      // Different color schemes for light and dark modes
       let color
       if (isDark) {
-        // Dark mode: purples, blues, and pinks with occasional bright accent
-        const isAccent = Math.random() < 0.1 // 10% chance of accent color
-        const hue = isAccent
-          ? Math.floor(Math.random() * 60) + 40 // yellows and oranges for accent
-          : Math.random() > 0.5
-            ? Math.floor(Math.random() * 60) + 220 // blues and purples
-            : Math.floor(Math.random() * 30) + 300 // pinks
-
-        const saturation = Math.floor(Math.random() * 30) + 70 // 70-100%
-        const lightness = Math.floor(Math.random() * 20) + 60 // 60-80%
-        const opacity = Math.random() * 0.3 + 0.1 // 0.1-0.4
-
-        color = `hsla(${hue}, ${saturation}%, ${lightness}%, ${opacity})`
+        // Dark mode colors
+        color = `hsla(${Math.floor(Math.random() * 60) + 220}, 
+                      ${Math.floor(Math.random() * 30) + 70}%, 
+                      ${Math.floor(Math.random() * 20) + 60}%, 
+                      ${Math.random() * 0.3 + 0.1})`
       } else {
-        // Light mode: light blues, purples, and teals with occasional dark accent
-        const isAccent = Math.random() < 0.1 // 10% chance of accent color
-        const hue = isAccent
-          ? Math.floor(Math.random() * 60) + 180 // deeper teals for accent
-          : Math.random() > 0.5
-            ? Math.floor(Math.random() * 60) + 180 // teals and light blues
-            : Math.floor(Math.random() * 40) + 240 // light purples
-
-        const saturation = Math.floor(Math.random() * 40) + 60 // 60-100%
-        const lightness = Math.floor(Math.random() * 20) + 70 // 70-90%
-        const opacity = Math.random() * 0.3 + 0.1 // 0.1-0.4
-
-        color = `hsla(${hue}, ${saturation}%, ${lightness}%, ${opacity})`
+        // Light mode colors
+        color = `hsla(${Math.floor(Math.random() * 60) + 180}, 
+                      ${Math.floor(Math.random() * 40) + 60}%, 
+                      ${Math.floor(Math.random() * 20) + 70}%, 
+                      ${Math.random() * 0.3 + 0.1})`
       }
 
-      // Add pulsing effect
-      const pulseSpeed = Math.random() * 0.03 + 0.01 // How fast it pulses
-      const pulseDirection = 1 // Start by growing
+      // Pulsing effect properties
+      const pulseSpeed = Math.random() * 0.03 + 0.01
+      const pulseDirection = 1
 
       return {
         x: Math.random() * width,
@@ -127,17 +115,14 @@ export default function AnimatedBackground() {
           mutation.attributeName === "class" &&
           mutation.target === document.documentElement
         ) {
-          const isDark = document.documentElement.classList.contains("dark")
-          if (isDark !== isDarkMode.current) {
-            isDarkMode.current = isDark
-            // Update particle colors when theme changes
-            setParticles((prev) =>
-              prev.map((particle) => ({
-                ...particle,
-                color: createParticle(dimensions.width, dimensions.height).color,
-              })),
-            )
-          }
+          const isDark = checkDarkMode()
+          // Update particle colors when theme changes
+          setParticles((prev) =>
+            prev.map((particle) => ({
+              ...particle,
+              color: createParticle(dimensions.width, dimensions.height).color,
+            })),
+          )
         }
       })
     })
@@ -273,7 +258,7 @@ export default function AnimatedBackground() {
             ctx.moveTo(particle.x, particle.y)
             ctx.lineTo(otherParticle.x, otherParticle.y)
 
-            const isDark = document.documentElement.classList.contains("dark")
+            const isDark = currentTheme === 'dark'
             // Opacity based on distance and particle sizes
             const opacityFactor = (particle.size + otherParticle.size) / 10
             const opacity = 0.05 * (1 - distance / connectionRadius) * opacityFactor
@@ -343,7 +328,7 @@ export default function AnimatedBackground() {
       {/* Animated gradient background */}
       <motion.div
         className="absolute inset-0 z-0"
-        animate={document.documentElement.classList.contains("dark") ? "dark" : "light"}
+        animate={currentTheme}
         variants={gradientVariants}
         transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, repeatType: "reverse" }}
       />
