@@ -1,42 +1,160 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-node_modules/
-.next/
-out/
+# General
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.ipa
+
+# Archives
+# *.tar
+# *.tgz
+# *.gz
+# *.zip
+# *.rar
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+*.sqlite3
+*.db
+
+# OS generated files
 .DS_Store
-.env*.local
-=======
-=======
->>>>>>> parent of 73444c2 (Deploy to GitHub Pages)
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-# dependencies
-/node_modules
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
 
-# next.js
-/.next/
-/out/
+# IDE - JetBrains (IntelliJ, PyCharm, WebStorm, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
 
-# production
-/build
+# IDE - Eclipse
+.classpath
+.project
+.settings/
 
-# debug
+# IDE - NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+.nb-gradle/
+
+# IDE - Xcode
+# build/ # Potentially conflicts with general build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.ipa
+*.xcuserstate
+
+# Dependency directories
+node_modules/
+jspm_packages/
+bower_components/
+# vendor/ # Less common in Next/React, can be uncommented if needed
+
+# Build output
+build/
+dist/
+out/
+# target/ # More common in Java/Scala
+
+# Next.js
+.next/
+out/ # For static exports: `next export`
+
+# React (e.g., Create React App if not using Next.js primarily for build)
+# build/ # Already covered above
+
+# Python (Often not relevant for Next/React, but kept for completeness if backend is Python)
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.Python
+env/
+venv/
+ENV/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Package manager lockfiles (if you want to ignore them, though usually committed)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Package manager log files
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
-# env files
-.env*
+# Temporary files
+*.tmp
+*.swp
+*~
 
-# vercel
-.vercel
+# Coverage directory
+coverage/
+.nyc_output/
 
-# typescript
-*.tsbuildinfo
-<<<<<<< HEAD
-next-env.d.ts
->>>>>>> parent of 73444c2 (Deploy to GitHub Pages)
-=======
-next-env.d.ts
->>>>>>> parent of 73444c2 (Deploy to GitHub Pages)
+# Sass cache
+.sass-cache/
+
+# Jupyter Notebook (if used for any data scripting alongside the project)
+.ipynb_checkpoints
