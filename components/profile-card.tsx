@@ -20,6 +20,7 @@ interface ProfileCardProps {
   phone?: string
   whatsapp?: string
   website?: string
+  fiverr?: string
 }
 
 interface ContactOptionProps {
