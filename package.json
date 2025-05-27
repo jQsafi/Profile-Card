@@ -1,6 +1,7 @@
 {
   "name": "profile-card",
   "version": "0.1.0",
+  "homepage": "https://jqsafi.github.io/Profile-Card",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
