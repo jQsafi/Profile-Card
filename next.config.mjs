@@ -10,8 +10,8 @@ const nextConfig = {
     unoptimized: true,
   },
   output: 'export',
-  basePath: '/Profile-Card',
-  assetPrefix: '/Profile-Card/',
+  basePath: '/profile-card',
+  assetPrefix: '/profile-card/',
 }
 
 export default nextConfig
