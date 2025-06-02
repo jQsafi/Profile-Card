@@ -10,7 +10,7 @@ const nextConfig = {
     unoptimized: true,
   },
   output: 'export',
-  basePath: '/profile-card',
+  basePath: '/Profile-Card',
   assetPrefix: '/profile-card/',
 }
 
