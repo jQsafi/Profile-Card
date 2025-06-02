@@ -29,17 +29,6 @@ const config: Config = {
           },
         },
       },
-      utilities: {
-        '.animation-delay-2000': {
-          'animation-delay': '2s',
-        },
-        '.animation-delay-4000': {
-          'animation-delay': '4s',
-        },
-        '.animation-delay-6000': {
-          'animation-delay': '6s',
-        },
-      },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
