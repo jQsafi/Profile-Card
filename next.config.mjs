@@ -11,7 +11,7 @@ const nextConfig = {
   },
   output: 'export',
   basePath: '/Profile-Card',
-  assetPrefix: '/profile-card/',
+  assetPrefix: '/Profile-Card/',
 }
 
 export default nextConfig
