@@ -54,8 +54,8 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
-        IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+        // Custom navigation icons are not supported as IconLeft/IconRight in v9.7.0
+        // You can override 'Chevron' or other supported keys if needed
       }}
       {...props}
     />
