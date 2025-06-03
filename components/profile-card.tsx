@@ -277,7 +277,7 @@ export default function ProfileCard({
         transition={{ duration: 0.5, delay: 0.8 }}
         className="w-28 h-28 sm:w-32 sm:h-32 lg:w-36 lg:h-36 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-lg absolute -top-14 sm:-top-16 lg:-top-18 z-10"
       >
-        <img src="/images/profile.jpeg" alt={name} className="w-full h-full object-cover" />
+        <img src="./images/profile.jpeg" alt={name} className="w-full h-full object-cover" />
       </motion.div>
 
       <motion.div
